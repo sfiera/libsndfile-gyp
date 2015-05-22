@@ -8,20 +8,34 @@
   , "defines": [ "HAVE_CONFIG_H", ]
   , "include_dirs":
     [ "include/mac"
+    , "include/linux"
     , "src/mac"
+    , "src/linux"
     ]
   , "direct_dependent_settings":
     { "include_dirs":
       [ "include/mac"
+      , "include/linux"
       ]
     }
   , "conditions":
     [ [ "OS != 'mac'"
       , { "include_dirs!":
-          [ "src/mac"
+          [ "include/mac"
+          , "src/mac"
           ]
         , "direct_dependent_settings":
           { "include_dirs!": ["include/mac"]
+          }
+        }
+      ]
+    , [ "OS != 'linux'"
+      , { "include_dirs!":
+          [ "include/linux"
+          , "src/linux"
+          ]
+        , "direct_dependent_settings":
+          { "include_dirs!": ["include/linux"]
           }
         }
       ]
@@ -35,6 +49,7 @@
   [ { "target_name": "libsndfile"
     , "product_prefix": ""
     , "type": "static_library"
+    , "link_settings": {"libraries": ["-lm"]}
     , "dependencies":
       [ "libsndfile-common"
       , "libsndfile-g72x"
@@ -141,36 +156,6 @@
       , "libsndfile-1.0.25/src/GSM610/short_term.c"
       , "libsndfile-1.0.25/src/GSM610/table.c"
       ]
-    , "cflags": [ "-Wno-format" ]
-    , "xcode_settings":
-      { "WARNING_CFLAGS":
-        [ "-Wno-format"
-        ]
-      }
-    , "defines": [ "HAVE_CONFIG_H", ]
-    , "include_dirs":
-      [ "include/mac"
-      , "src/mac"
-      ]
-    , "direct_dependent_settings":
-      { "include_dirs":
-        [ "include/mac"
-        ]
-      }
-    , "conditions":
-      [ [ "OS != 'mac'"
-        , { "include_dirs!":
-            [ "src/mac"
-            ]
-          , "direct_dependent_settings":
-            { "include_dirs!": ["include/mac"]
-            }
-          }
-        ]
-      , [ "OS != 'windows'"
-        , { "sources!": [ "libsndfile-1.0.25/src/windows.c" ] }
-        ]
-      ]
     }
 
   , { "target_name": "sndfile-regtest"
@@ -181,15 +166,7 @@
       , "libsndfile-1.0.25/regtest/sndfile-regtest.c"
       ]
     , "dependencies": ["libsndfile"]
-    , "include_dirs":
-      [ "src/mac"
-      , "libsndfile-1.0.25/src"
-      ]
-    , "conditions":
-      [ [ "OS != 'mac'"
-        , { "include_dirs!": [ "src/mac" ] }
-        ]
-      ]
+    , "include_dirs": ["libsndfile-1.0.25/src"]
     }
   ]
 }
